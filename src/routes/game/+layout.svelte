@@ -1,9 +1,11 @@
 <script lang="ts">
+	import CardList from '$lib/components/cards/CardList.svelte';
+	import { onMount } from 'svelte';
 	import type { Card } from '$lib/schemas/CardSchema';
-	import CardContainer from './CardContainer.svelte';
 
-	export let currentQuestion = -1;
-	export let cards: Card[] = [
+	let currentQuestion = -1;
+
+	const cards: Card[] = [
 		{
 			code: '6H',
 			image: 'https://deckofcardsapi.com/static/img/6H.png',
@@ -35,10 +37,18 @@
 			suit: 'HEARTS'
 		}
 	];
+
+	let ready = false;
+	onMount(() => {
+		ready = true;
+	});
 </script>
 
-<div class="flex flex-col sm:flex-row justify-between">
-	{#each cards as card, i}
-		<CardContainer {card} showCard={i <= currentQuestion} delay={i * 1000} />
-	{/each}
-</div>
+{#if ready}
+	<div class="flex flex-col">
+		<CardList {cards} {currentQuestion} />
+		<div class="flex flex-row">
+			<slot />
+		</div>
+	</div>
+{/if}

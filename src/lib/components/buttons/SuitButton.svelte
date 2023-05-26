@@ -8,8 +8,8 @@
 	const dispatch = createEventDispatcher();
 
 	export let suits: ('H' | 'D' | 'C' | 'S')[] = ['H', 'D'];
-	export let color: 'red' | 'black' = 'red';
-	$: iconSize = 42;
+	export let colour: 'red' | 'black' = 'red';
+	export let iconSize = 48;
 
 	function onClick() {
 		dispatch('click');
@@ -19,11 +19,15 @@
 <div class="relative">
 	<button
 		on:click={onClick}
-		class={(color === 'red'
-			? 'text-red-500 border-red-500 after:bg-red-500 hover:text-white focus:text-white'
-			: 'text-black border-black after:bg-black hover:text-white focus:text-white') +
+		class={$$props.class +
+			(colour === 'red'
+				? /** Depending on the suit, we have a diff bg color*/
+				  ' text-red-500 border-red-500 after:bg-red-500 hover:text-white focus:text-white'
+				: ' text-black border-black after:bg-black hover:text-white focus:text-white') +
+			/** These are the main button classes */
 			' flex flex-row justify-center items-center p-5 max-w-[150px] max-h-[150px] flex-wrap bg-transparent border-4 rounded-lg aspect-square transition duration-100 delay-100 ease-in' +
-			' after:w-full after:h-full after:absolute after:scale-0 after:rounded-3xl hover:after:rounded-lg focus:after:rounded-lg hover:after:scale-100 focus:after:scale-100 after:transition-all after:duration-300 after:ease-in-out'}
+			/** These control the :after */
+			' after:max-w-[150px] after:max-h-[150px] after:h-full after:w-full after:absolute after:scale-0 after:rounded-3xl hover:after:rounded-lg focus:after:rounded-lg hover:after:scale-100 focus:after:scale-100 after:transition-all after:duration-300 after:ease-in-out'}
 	>
 		{#each suits as suit}
 			{#if suit === 'H'}
