@@ -11,7 +11,7 @@ const CardSchema = z
 			})
 			.strict(),
 		value: z.string(),
-		suit: z.string()
+		suit: z.enum(['SPADES', 'HEARTS', 'DIAMONDS', 'CLUBS'])
 	})
 	.strict();
 

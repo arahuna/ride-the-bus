@@ -1,47 +1,32 @@
-<script>
-	import { fly, fade } from 'svelte/transition';
-	import SuitButton from '$lib/components/buttons/SuitButton.svelte';
-	import { onMount } from 'svelte';
+<script lang="ts">
+	import { getContext, onMount } from 'svelte';
+	import type { Writable } from 'svelte/store';
+	import Validation from '$lib/components/Validation.svelte';
+	import QuestionOne from '$lib/components/Questions/QuestionOne.svelte';
+	import { fade } from 'svelte/transition';
 
-	let ready = false;
-	onMount(() => {
-		ready = true;
-	});
+	const flippedCards: Writable<number> = getContext('flippedCards');
+
+	let answered = false;
+	let success = false;
+
+	function evaluateResult(answer: CustomEvent<boolean>) {
+		flippedCards.update((n) => n + 1);
+		setTimeout(() => {
+			success = answer.detail;
+			answered = true;
+		}, 1000);
+	}
 </script>
 
-{#if ready}
-	<div
-		class="flex justify-center w-full flex-col items-center
-"
-	>
-		<h1
-			class="font-semibold text-2xl text-white text-center font-noto-sans"
-			transition:fly={{
-				y: 100,
-				duration: 1000
-			}}
-		>
-			Is the first card a red card or a black card?
-		</h1>
-		<div class="flex flex-row mt-4">
-			<div
-				transition:fly={{
-					x: -50,
-					duration: 1000,
-					delay: 500
-				}}
-			>
-				<SuitButton suits={['H', 'D']} colour="red" class="mr-3" />
-			</div>
-			<div
-				transition:fly={{
-					x: 50,
-					duration: 1000,
-					delay: 500
-				}}
-			>
-				<SuitButton suits={['C', 'S']} colour="black" class="ml-3" />
-			</div>
-		</div>
-	</div>
-{/if}
+<div class="flex justify-center w-full h-full flex-col items-center">
+	{#if !answered}
+		<span in:fade={{ duration: 500, delay: 1000 }}>
+			<QuestionOne on:answered={evaluateResult} />
+		</span>
+	{:else}
+		<span in:fade={{ duration: 200 }}>
+			<Validation {success} nextQuestion={2} />
+		</span>
+	{/if}
+</div>

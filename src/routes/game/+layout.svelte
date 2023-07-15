@@ -1,54 +1,25 @@
 <script lang="ts">
 	import CardList from '$lib/components/cards/CardList.svelte';
-	import { onMount } from 'svelte';
+	import { setContext } from 'svelte';
 	import type { Card } from '$lib/schemas/CardSchema';
+	import type { LayoutData } from './$types';
+	import { writable } from 'svelte/store';
 
-	let currentQuestion = -1;
+	export let data: LayoutData;
 
-	const cards: Card[] = [
-		{
-			code: '6H',
-			image: 'https://deckofcardsapi.com/static/img/6H.png',
-			images: {
-				svg: 'https://deckofcardsapi.com/static/img/6H.svg',
-				png: 'https://deckofcardsapi.com/static/img/6H.png'
-			},
-			value: '6',
-			suit: 'HEARTS'
-		},
-		{
-			code: '6H',
-			image: 'https://deckofcardsapi.com/static/img/6H.png',
-			images: {
-				svg: 'https://deckofcardsapi.com/static/img/6H.svg',
-				png: 'https://deckofcardsapi.com/static/img/6H.png'
-			},
-			value: '6',
-			suit: 'HEARTS'
-		},
-		{
-			code: '6H',
-			image: 'https://deckofcardsapi.com/static/img/6H.png',
-			images: {
-				svg: 'https://deckofcardsapi.com/static/img/6H.svg',
-				png: 'https://deckofcardsapi.com/static/img/6H.png'
-			},
-			value: '6',
-			suit: 'HEARTS'
-		}
-	];
+	const flippedCards = writable(0);
+	const score = writable(0);
+	const cards = writable<Card[]>([]);
+	$: cards.set(data.cards);
 
-	let ready = false;
-	onMount(() => {
-		ready = true;
-	});
+	setContext('flippedCards', flippedCards);
+	setContext('score', score);
+	setContext('cards', cards);
 </script>
 
-{#if ready}
-	<div class="flex flex-col">
-		<CardList {cards} {currentQuestion} />
-		<div class="flex flex-row">
-			<slot />
-		</div>
+<div class="flex flex-col">
+	<CardList cards={$cards} flippedCards={$flippedCards} />
+	<div class="flex items-center flex-row h-full min-h-[250px]">
+		<slot />
 	</div>
-{/if}
+</div>

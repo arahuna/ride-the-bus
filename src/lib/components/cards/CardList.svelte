@@ -2,7 +2,7 @@
 	import type { Card } from '$lib/schemas/CardSchema';
 	import CardContainer from './CardContainer.svelte';
 
-	export let currentQuestion = -1;
+	export let flippedCards = -1;
 	export let cards: Card[] = [
 		{
 			code: '6H',
@@ -39,6 +39,6 @@
 
 <div class="flex flex-col sm:flex-row justify-between">
 	{#each cards as card, i}
-		<CardContainer {card} showCard={i <= currentQuestion} delay={i * 1000} />
+		<CardContainer {card} showCard={i + 1 <= flippedCards} delay={i * 1000} />
 	{/each}
 </div>

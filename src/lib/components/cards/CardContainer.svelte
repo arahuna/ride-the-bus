@@ -3,54 +3,45 @@
 	import { cubicOut } from 'svelte/easing';
 	import CardBack from '$lib/assets/CardBack.png';
 	import { fly, fade } from 'svelte/transition';
-	import { onMount } from 'svelte';
-
-	// This prevents a double flip on first render
-	let ready = false;
-	onMount(() => {
-		ready = true;
-	});
 
 	export let showCard = false;
 	export let card: Card;
 	export let delay = 0;
 </script>
 
-{#if ready}
-	<div
-		class="flex flex-col mx-4 my-2"
-		transition:fade={{
-			duration: 500
-		}}
-	>
-		<div class="rounded-lg p-4 bg-yellow-200">
-			<div class="w-full h-full flip-card" class:flip={showCard}>
-				{#if card}
-					<div
-						class="flip-card-inner shadow-md rounded-xl"
-						transition:fly={{ y: '-100%', duration: 1000, easing: cubicOut, delay: delay }}
-					>
-						<div class="flip-card-front">
-							{#if !showCard}
-								<img
-									class="w-full h-full rounded-lg max-h-md border-black border"
-									src={CardBack}
-									alt="card back"
-									out:fade={{ delay: 250, duration: 0 }}
-								/>
-							{/if}
-						</div>
-						<div class="flip-card-back">
-							{#if showCard}
-								<img class="w-full h-full rounded-lg" src={card.image} alt={card.code} />
-							{/if}
-						</div>
+<div
+	class="flex flex-col mx-4 my-2"
+	in:fade={{
+		duration: 500
+	}}
+>
+	<div class="rounded-lg p-4 bg-yellow-200">
+		<div class="w-full h-full flip-card" class:flip={showCard}>
+			{#if card}
+				<div
+					class="flip-card-inner shadow-md rounded-xl"
+					in:fly={{ y: '-100%', duration: 1000, easing: cubicOut, delay: delay }}
+				>
+					<div class="flip-card-front">
+						{#if !showCard}
+							<img
+								class="w-full h-full rounded-lg max-h-md border-black border"
+								src={CardBack}
+								alt="card back"
+								out:fade={{ delay: 250, duration: 0 }}
+							/>
+						{/if}
 					</div>
-				{/if}
-			</div>
+					<div class="flip-card-back">
+						{#if showCard}
+							<img class="w-full h-full rounded-lg" src={card.image} alt={card.code} />
+						{/if}
+					</div>
+				</div>
+			{/if}
 		</div>
 	</div>
-{/if}
+</div>
 
 <style scoped>
 	.flip-card {

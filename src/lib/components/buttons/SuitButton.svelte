@@ -5,20 +5,23 @@
 	import SuitHeartFill from 'svelte-bootstrap-icons/lib/SuitHeartFill.svelte';
 	import { createEventDispatcher } from 'svelte';
 
-	const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher<{
+		click: string;
+	}>();
 
 	export let suits: ('H' | 'D' | 'C' | 'S')[] = ['H', 'D'];
 	export let colour: 'red' | 'black' = 'red';
 	export let iconSize = 48;
 
 	function onClick() {
-		dispatch('click');
+		dispatch('click', colour);
 	}
 </script>
 
 <div class="relative">
 	<button
 		on:click={onClick}
+		disabled={$$props.disabled}
 		class={$$props.class +
 			(colour === 'red'
 				? /** Depending on the suit, we have a diff bg color*/
